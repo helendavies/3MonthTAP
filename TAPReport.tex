@@ -1,0 +1,86 @@
+\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
+%\geometry{landscape}                		% Activate for rotated page geometry
+%\usepackage[parfill]{parskip}    		% Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}				% Use pdf, png, jpg, or eps§ with pdflatex; use eps in DVI mode
+								% TeX will automatically convert eps --> pdf in pdflatex		
+\usepackage{amssymb}
+
+%SetFonts
+
+%SetFonts
+
+
+\title{Tap thingy}
+\author{Me}
+%\date{}							% Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+
+Hello this is a very exciting report which will hopefully be more exciting by the end of December \cite{Weltmann2009}. And the references work \cite{Schroter2015atomic}. Wooo.
+
+\section{Modelling}
+Modelling of plasmas in general is useful to be able to compare to experimental data. 
+It is then useful to be able to indicate which parameters may be the most influential for altering the concentrations of different species which may be particularly useful in terms of biological activity.
+\subsection{European Collaboration}
+This is about trying to design a good model for air plasmas - hence my interest.
+\begin{itemize}
+\item Dates
+\item Aims
+\item My involvement
+\end{itemize}
+\subsection{GlobalKin}
+\begin{itemize}
+\item How it works and what you need to tell it to work - e.g. power, dimensions, diffusion (is this the important bit to do with walls etc), gas mixture inputs
+\item Theory - as in, cross sections, rate coefficients, EEDFs etc
+\item Equations? Ie the continuity equations?
+\item Electrons - Boltzmann solver working from the cross sections
+\item Chemistry - about the chemistry sets/rate coefficients etc
+\end{itemize}
+\subsection{Learning to use GlobalKin...}
+A few tasks to learn to use the system and how to alter input parameters and how to use bash etc! 
+\section{Modelling Air Plasmas}
+\subsection{What's been done before?} 
+There are many different models and chemistry sets that have been used for previous attempts at modelling air plasmas. 
+Issues with modelling atmospheric pressure air plasmas is the number of species that are involved and the high collisionality environment.
+\subsection{Chemistry sets}
+There are lots of chemistry sets that have been used before for air plasma modelling.
+Spacecraft re-entry? 
+\begin{itemize}
+\item Lazarou2016numerical - He/Air plasma. Investigating the effect of air in He plasmas and therefore the effects of impurities on the running of He plasmas. 27 species, 153 reactions. No NO$_x$ species included as increased computational time too much without affecting simulation results significantly \cite{Lazarou2016numerical}.
+\item Murakami2014afterglow -  This is modelling air impurities in He/O$_2$ plasmas too. Very small percentage air mixture ($\approx$ 0.025\%). The importance of the air in the model was to see how different percentages of air impurities in the He plasma affected the densities of different plasma species.\cite{Murakami2014afterglow}
+\item here is another paper \cite{Gordiets1995kinetic}.
+\item Rate constants for reactions in global chemistry models affect species density evolution over time. 
+By evaluating the reactions/rate constants which contribute the most to a He/O$_2$ plasma chemistry, the comprehensive reaction scheme (25 species, 373 reactions) was rationalised to a reduced scheme (12 species, 51 reactions). The initial rate constants determined through experimentation/theory have an associated error with them. Therefore, the study also looked at which rate constants for each of the included reactions contributed the most error to the system. It was found that it was a small proportion of the reaction rate constants that were responsible for the majority of the error. In particular, rate constants for 3 body reactions involving He and electron reactions with O species, had the highest contribution to the overall error \cite{Turner2016uncertainty}.
+\item A collisional radiative model (looking at the distribution of atoms/molecules over their excited states \cite{Sijde1984collisional}) was developed to look at air plasmas formed during spacecraft entry to upper levels of a planets atmosphere. 
+
+
+\end{itemize}
+
+\section{Electron orbitals, angular momentum and spin}
+Understanding term symbols:
+\begin{equation}
+^{2S+1}L_{J}
+\end{equation}
+where $S$ is the total spin quantum number, $L$ is the orbital quantum number (i.e. S, P, D, F etc), and $J$ is the total angular momentum quantum number.
+$S$ is related to the number of unpaired electrons present in the outermost electron shell.
+Each electron $S = \pm \frac{1}{2}$, therefore, by adding up the spin of every electron, this gives the overall spin. If there are no unpaired electrons, $S = 0$. However, if there is one, spin-up free electron, $S = +\frac{1}{2}$ etc. 
+The term $2S + 1$ gives the multiplicity of the atom/molecule ($2S + 1 = 1 \rightarrow singlet, 2 \rightarrow doublet$ etc)
+Therefore, for the above atom where $S = +\frac{1}{2}$, $2S + 1 = 2$, making it a doublet.
+L is given by the type of outer shell, i.e. S, P, D, F etc orbital.
+
+
+\section{Experimental}
+\subsection{What's been done}
+Nothing
+\subsection{What are the next steps}
+Aim to measure NO? And see what happens to cells when treated with the plasma?!
+Combine what we see with model... May be He/Air (He/O$_2$/N$_2$) gas mixture.
+
+
+\bibliographystyle{unsrt}
+\bibliography{/Users/hld523/Bibliography/MyPapers}
+\end{document}  
