@@ -19,12 +19,42 @@
 \begin{document}
 \maketitle
 
-
 Hello this is a very exciting report which will hopefully be more exciting by the end of December \cite{Weltmann2009}. And the references work \cite{Schroter2015atomic}. Wooo.
+
+\section{Background}
+\subsection{What is LTP}
+\subsection{LTP in medicine}
+\subsection{My PhD project}
 
 \section{Modelling}
 Modelling of plasmas in general is useful to be able to compare to experimental data. 
 It is then useful to be able to indicate which parameters may be the most influential for altering the concentrations of different species which may be particularly useful in terms of biological activity.
+\subsection{GlobalKin}
+GlobalKin is a global chemistry plasma model, which takes into account experimental plasma parameters (such as power input and gas flow), along with all possible reactions that take place in the plasma and their rates.
+
+\begin{itemize}
+\item How it works and what you need to tell it to work - e.g. power, dimensions, diffusion (is this the important bit to do with walls etc), gas mixture inputs
+\item Theory - as in, cross sections, rate coefficients, EEDFs etc
+\item Equations? Ie the continuity equations?
+\item Electrons - Boltzmann solver working from the cross sections
+\item Chemistry - about the chemistry sets/rate coefficients etc
+.dat file. Here you input all the chemistry. Every species that is included in the model is listed here with a number of parameters attached to it:
+\begin{enumerate}
+\item Species name
+\item Enthalpy of formation - the amount of energy required to form the species. This is set to zero for the gases
+\item Charge (1, 0, -1)
+\item Lennard Jones parameters 1 and 2. 1 is $\sigma$ which is the internuclear distance between atoms where the potential between them is zero. Parameter 2...? Units are kelvin?!
+\item Molecular weight
+\item Sticking/disappearance coefficient - this is the fraction of the species that will be lost through interaction with the wall
+\item Return branching fraction - this is the fraction of the species lost at the wall which re-enter the plasma
+\item Return species - this is the species that the fraction of lost species comes back as
+\end{enumerate}
+Following this, all possible reactions that could occur in the plasma and their probability of occurring are taken into account. For this, the reaction rate coefficient is given in terms of the Arrhenius equation. Except for electrons where only the reaction cross section is given. Rates are dependent on energy/velocity of particles. Therefore, for heavy particles, whose energies don't change much due to their mass, a fixed rate coefficient is sufficient. However, for light particles, i.e. electrons, which oscillate fast with the electric field, this is not appropriate. Therefore, only the reaction cross section is included and the rate is calculated using this cross section combined with the internally calculated EEDF.
+
+\end{itemize}
+\subsection{Learning to use GlobalKin...}
+A few tasks to learn to use the system and how to alter input parameters and how to use bash etc! 
+
 \subsection{European Collaboration}
 This is about trying to design a good model for air plasmas - hence my interest.
 \begin{itemize}
@@ -32,21 +62,38 @@ This is about trying to design a good model for air plasmas - hence my interest.
 \item Aims
 \item My involvement
 \end{itemize}
-\subsection{GlobalKin}
-\begin{itemize}
-\item How it works and what you need to tell it to work - e.g. power, dimensions, diffusion (is this the important bit to do with walls etc), gas mixture inputs
-\item Theory - as in, cross sections, rate coefficients, EEDFs etc
-\item Equations? Ie the continuity equations?
-\item Electrons - Boltzmann solver working from the cross sections
-\item Chemistry - about the chemistry sets/rate coefficients etc
-\end{itemize}
-\subsection{Learning to use GlobalKin...}
-A few tasks to learn to use the system and how to alter input parameters and how to use bash etc! 
+
+
 \section{Modelling Air Plasmas}
 \subsection{What's been done before?} 
 There are many different models and chemistry sets that have been used for previous attempts at modelling air plasmas. 
 Issues with modelling atmospheric pressure air plasmas is the number of species that are involved and the high collisionality environment.
 \subsection{Chemistry sets}
+For the purposes of both the collaboration, and my own research project, the aim is to find an appropriate air chemistry set that can be used for modelling.
+Firstly, in the original thesis presenting the GlobalKin code, there is a full reaction chemistry set presented for modelling humid air plasmas interacting with polypropylene surfaces \cite{Dorai2002modeling}.
+Here, they consider two sets.
+Firstly the gas phase (consisting of species formed from, and reactions involving the flow gas containing N$_2$/O$_2$/H$_2$O in 79/20/1 proportions), and secondly the surface interaction chemistry. 
+The gas phase consists $\sim$334 reactions and 56 species. 
+The model used is GlobalKin and, therefore, works as outlined above.
+
+However, there are other types of models that have been used for modelling air plasmas.
+For example, in a recent paper by Kutasi $et al$ \cite{Kutasi2016tuning} they present a model for an Ar/N$_2$/O$_2$ plasmas.
+Their main aim is to investigate the afterglow region of a plasma, both using Ar/N$_2$/O$_2$ mixture and using just N$_2$/O$_2$.
+The simulation works by solving the homogeneous electron Boltzmann equation, alongside the rate balance equations for the creation and loss of important heavy particles (ions and neutrals). 
+The maintenance reduced electric field is also calculated self-consistently.
+
+Unfortunately, the full reaction set is not presented, however, the N$_2$-O$_2$ reactions are taken mainly from \cite{Guerra1997self, Pintassilgo2005modelling, Kutasi2008modelling}.
+In 1997, Guerra $et al$ \cite{Guerra1997self} presented a paper (as an extension to a previous publication \cite{Guerra1995non}), whereby 
+
+
+is a paper building on a previous one \cite{Guerra1995non}, where some vibrational states of N$_2$ had to be an input parameter of the model, taken from experimental data. Here, the model consists of the electron Boltzmann equation coupled to rate balance equations for vibrationally excited molecules of N$_2$ and O$_2$, electronically excited states of N$_2$ and NO, N and O species (with term symbols attached?). All this plus continuity equations for electrons and main positive ions (N$_2^+$, N$_4^+$, O$^+$, O$_2^+$, NO$^+$). TO DO - read this paper to find out the point of what it was doing. What was the model doing? 
+\cite{Pintassilgo2005modelling} is looking at sterilisation processes and therefore using a model to predict ways of maximising concentrations of NO ($B ^2\Sigma$) and O($^3P$). 
+The model starts by working out the EEDF and also the vibrational distribution function of some molecules. 
+It also calculates the concentrations of N$_2$ and O$_2$ electronic states, N and O atoms, NO, NO$_2$ and O$_3$ species, as well as the positive and negative ions formed in the discharge. However, not sure what the type of model is because very few reactions shown...
+\cite{Kutasi2008modelling} is a paper about a 3-D hydrodynamic model, with regards to UV emission from the plasma, to be used for sterilisation.
+
+However, whilst they do not cite their entire reaction chemistry, they do provide references for reactions involving the different gases. Of particular interest are the references relating to reactions involving N$_2$ and O$_2$.
+
 There are lots of chemistry sets that have been used before for air plasma modelling.
 Spacecraft re-entry? 
 \begin{itemize}
@@ -54,8 +101,20 @@ Spacecraft re-entry?
 \item Murakami2014afterglow -  This is modelling air impurities in He/O$_2$ plasmas too. Very small percentage air mixture ($\approx$ 0.025\%). The importance of the air in the model was to see how different percentages of air impurities in the He plasma affected the densities of different plasma species.\cite{Murakami2014afterglow}
 \item here is another paper \cite{Gordiets1995kinetic}.
 \item Rate constants for reactions in global chemistry models affect species density evolution over time. 
-By evaluating the reactions/rate constants which contribute the most to a He/O$_2$ plasma chemistry, the comprehensive reaction scheme (25 species, 373 reactions) was rationalised to a reduced scheme (12 species, 51 reactions). The initial rate constants determined through experimentation/theory have an associated error with them. Therefore, the study also looked at which rate constants for each of the included reactions contributed the most error to the system. It was found that it was a small proportion of the reaction rate constants that were responsible for the majority of the error. In particular, rate constants for 3 body reactions involving He and electron reactions with O species, had the highest contribution to the overall error \cite{Turner2016uncertainty}.
-\item A collisional radiative model (looking at the distribution of atoms/molecules over their excited states \cite{Sijde1984collisional}) was developed to look at air plasmas formed during spacecraft entry to upper levels of a planets atmosphere. 
+By evaluating the reactions/rate constants which contribute the most to a He/O$_2$ plasma chemistry, the comprehensive reaction scheme (25 species, 373 reactions \cite{Turner2015uncertainty}) was rationalised to a reduced scheme (12 species, 51 reactions). The initial rate constants determined through experimentation/theory have an associated error with them. Therefore, the study also looked at which rate constants for each of the included reactions contributed the most error to the system. It was found that it was a small proportion of the reaction rate constants that were responsible for the majority of the error. In particular, rate constants for 3 body reactions involving He and electron reactions with O species, had the highest contribution to the overall error \cite{Turner2016uncertainty}.
+\item A collisional radiative model (looking at the distribution of atoms/molecules over their excited states \cite{Sijde1984collisional}) was developed to look at air plasmas formed during spacecraft entry to upper levels of a planets atmosphere. This isn't really what I'm looking for though as it is too much to do with different vibrationally excited states... I think \cite{Bultel2006collisional}.
+\item Really useful paper that used GlobalKin for argon plasma going into humid air, but also has good intro on some air plasma chemistry sets \cite{Gaens2013kinetic}.
+\item This paper talks about modelling surface microdischarges. Ie from top to bottom: driven electrode, dielectric, discharge, grounded mesh, effluent, surface to be treated. 53 species, 624 reactions \cite{Sakiyama2012plasma}.
+\item Kutasi \cite{Kutasi2016tuning}(Vasco paper) does not cite it's full chemistry set for Ar/O$_2$/N$_2$. However, it says it's set it based mainly on other papers. Of particular interest it's N$_2$/O$_2$ interactions come mainly from \cite{Pintassilgo2005modelling, Guerra1997self, Kutasi2008modelling}.
+\item \cite{Guerra1997self} is a paper building on a previous one \cite{Guerra1995non}, where some vibrational states of N$_2$ had to be an input parameter of the model, taken from experimental data. Here, the model consists of the electron Boltzmann equation coupled to rate balance equations for vibrationally excited molecules of N$_2$ and O$_2$, electronically excited states of N$_2$ and NO, N and O species (with term symbols attached?). All this plus continuity equations for electrons and main positive ions (N$_2^+$, N$_4^+$, O$^+$, O$_2^+$, NO$^+$). TO DO - read this paper to find out the point of what it was doing. What was the model doing? 
+\item \cite{Pintassilgo2005modelling} is looking at sterilisation processes and therefore using a model to predict ways of maximising concentrations of NO ($B ^2\Sigma$) and O($^3P$). 
+The model starts by working out the EEDF and also the vibrational distribution function of some molecules. 
+It also calculates the concentrations of N$_2$ and O$_2$ electronic states, N and O atoms, NO, NO$_2$ and O$_3$ species, as well as the positive and negative ions formed in the discharge. However, not sure what the type of model is because very few reactions shown...
+\item \cite{Kutasi2008modelling} is a paper about a 3-D hydrodynamic model, with regards to UV emission from the plasma, to be used for sterilisation.
+
+\item \cite{Dorai2002modeling} is a thesis from the Kushner group who designed GlobalKin. 
+In this, a full reaction set is listed for humid air interaction with polypropylene surfaces.
+It says there are 90 species and nearly 400 reactions included in the set (56 species containing only N, O and H. Lots of reactions).
 
 
 \end{itemize}
