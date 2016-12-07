@@ -29,8 +29,18 @@ Hello this is a very exciting report which will hopefully be more exciting by th
 \section{Modelling}
 Modelling of plasmas in general is useful to be able to compare to experimental data. 
 It is then useful to be able to indicate which parameters may be the most influential for altering the concentrations of different species which may be particularly useful in terms of biological activity.
+
 \subsection{GlobalKin}
-GlobalKin is a global chemistry plasma model, which takes into account experimental plasma parameters (such as power input and gas flow), along with all possible reactions that take place in the plasma and their rates.
+GlobalKin is a 0 dimensional global chemistry plasma model which has three main parts - A reaction chemistry and transport module, a Boltzmann equation solver for determining electron energy distributions (EED) and an ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
+The chemistry and transport module constructs differential equations for the evolution of species concentrations and temperatures over time. 
+This takes into account the electron impact rate coefficients, which are calculated as a function of the electron energy by the Boltzmann solver.
+The differential equations are then solved by the ODE solver.
+
+
+
+It able to predict the densities of different species present in the plasma channel, by taking into account experimental plasma parameters (such as power input and gas flow), along with all possible reactions that take place in the plasma and their rates.
+The model has no spatial resolution, but calculates the species concentrations over time, which can be translated into a position along the plasma channel.
+
 
 \begin{itemize}
 \item How it works and what you need to tell it to work - e.g. power, dimensions, diffusion (is this the important bit to do with walls etc), gas mixture inputs
@@ -49,7 +59,17 @@ GlobalKin is a global chemistry plasma model, which takes into account experimen
 \item Return branching fraction - this is the fraction of the species lost at the wall which re-enter the plasma
 \item Return species - this is the species that the fraction of lost species comes back as
 \end{enumerate}
-Following this, all possible reactions that could occur in the plasma and their probability of occurring are taken into account. For this, the reaction rate coefficient is given in terms of the Arrhenius equation. Except for electrons where only the reaction cross section is given. Rates are dependent on energy/velocity of particles. Therefore, for heavy particles, whose energies don't change much due to their mass, a fixed rate coefficient is sufficient. However, for light particles, i.e. electrons, which oscillate fast with the electric field, this is not appropriate. Therefore, only the reaction cross section is included and the rate is calculated using this cross section combined with the internally calculated EEDF.
+Following this, all possible reactions that could occur in the plasma and their probability of occurring are taken into account. 
+For this, the reaction rate coefficient is given in terms of the Arrhenius equation. 
+Except for electrons where only the reaction cross section is given. 
+Rates are dependent on energy/velocity of particles. 
+Therefore, for heavy particles, whose energies don't change much due to their mass, a fixed rate coefficient is sufficient. 
+However, for light particles, i.e. electrons, which oscillate fast with the electric field, this is not appropriate.
+Therefore, only the reaction cross section is included and the rate is calculated using this cross section combined with the internally calculated EEDF.
+
+\begin{equation}
+\frac{dn_i}{dt} = \frac{1}{\Lambda_D^2}\bigg(-D_iN_i + \sum_jD_jN_j\gamma_jf_{ji}\bigg) + S_i - \frac{N_i}{T_g}\frac{dT_g}{dt}
+\end{equation}
 
 \end{itemize}
 \subsection{Learning to use GlobalKin...}
