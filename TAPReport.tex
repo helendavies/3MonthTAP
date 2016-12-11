@@ -38,31 +38,38 @@ The appealing properties of LTP arise due to electron-mediated processes.
 Firstly, dissociation of molecules by electron impact produce, for example, free radicals, including reactive oxygen and nitrogen species (RONS), which are known to be bactericidal \cite{Kong2009plasma}.
 Secondly, electronic excitation from electron impact causes excitation of molecules and subsequent emission of, for example, UV radiation which is known to be bactericidal at certain wavelengths and powers \cite{Laroussi2004evaluation}.
 Thirdly, sufficiently energetic free electrons can cause ionisation of other atoms/molecules to sustain the plasma and produce ions that can contribute to the bactericidal effects of LTP \cite{Mendis2000a, Laroussi2002nonthermal}.
+
+
 LTP has shown significant promise in the eradication and/or inactivation of many microorganisms, including those in biofilms \cite{Laroussi2005low}. 
 There is also evidence to show that LTP may promote the wound healing process in eukaryotic cells \cite{Haertel2014nonthermal, Kramer2013suitability}.
+
+
 Identification of specific roles of different plasma components could help with tailoring plasmas for different biomedical applications.
 
-Here, we propose the development of an LTP device utilising an air feed gas, which will be characterised both experimentally and computationally, and its potential for use in wound infection and healing applications assessed through various \textit{in vitro} biological assays.
+For this PhD project the development of an LTP device utilising an air feed gas is proposed.
+It will be characterised both experimentally and computationally, and its potential for use in wound infection and healing applications assessed through various \textit{in vitro} biological assays.
 The investigation into using an air feed gas is beneficial when considering low-cost wound treatments, as it should reduce running costs, and increase device portability, through eliminating the need for bottled gases.
 
-\section*{Modelling}
+\section*{Plasma Modelling}
+For the last 3 months, I have been working on the computational aspects of my project.
 Modelling of plasmas in general is useful to be able to compare to experimental data. 
 It is then useful to be able to indicate which parameters may be the most influential for altering the concentrations of different species which may be particularly useful in terms of biological activity.
 
 \subsection*{GlobalKin}
-GlobalKin is a 0 dimensional global chemistry plasma model which has three main parts - A reaction chemistry and transport module, a Boltzmann equation solver for determining electron energy distributions (EED) and an ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
+The model of choice for simulations is GlobalKin.
+GlobalKin is a 0 dimensional global chemistry plasma model which has three main parts. (1) a reaction chemistry and transport module, (2) a Boltzmann equation solver for determining electron energy distribution functions (EEDF) and (3) an ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
 The chemistry and transport module constructs differential equations for the evolution of species concentrations and temperatures over time. 
-This takes into account the electron impact rate coefficients, which are calculated as a function of the electron energy by the Boltzmann solver.
+This takes into account the electron impact rate coefficients, which are calculated as a function of the electron energy by the Boltzmann solver (see below).
 The differential equations are then solved by the ODE solver.
 
-The time evolution of species densities is determined using the following equation:
+The time evolved density of species $i$ is determined using the following equation.
 
 \begin{equation}
 \frac{dn_i}{dt} = \frac{1}{\Lambda_D^2}\bigg(-D_iN_i + \sum_jD_jN_j\gamma_jf_{ji}\bigg) + S_i - \frac{N_i}{T_g}\frac{dT_g}{dt}
 \label{SpeciesEvolutionEqn}
 \end{equation}
 
-where $N$ is the number density of heavy species $i$, $\Lambda_D$ is the diffusion distance, $D$ is the diffusion coefficient, $\gamma$ is the sticking coefficient of the species at the walls, $f_{ji}$ is the fraction of species $j$ that returns from the wall as species $i$, $S_i$ is the source term and $T_g$ is the gas temperature.
+where $N$ is the number density of heavy species $i$, $\Lambda_D$ is the diffusion distance, $D$ is the diffusion coefficient, $\gamma$ is the sticking coefficient of species $j$ at the walls, $f_{ji}$ is the fraction of species $j$ that returns from the wall as species $i$, $S_i$ is the source term and $T_g$ is the gas temperature.
 
 The first term of equation \ref{SpeciesEvolutionEqn} refers to the interactions of species with the walls, the second is a source term for species, which takes into account the reactions producing and consuming it and the third term relates to the temperature.
 
@@ -74,13 +81,13 @@ S_i = \sum_j(a_{ij}^{RHS}-a_{ij}^{LHS})k_j\prod_lN_l^{a_{ij}^{(LHS)}}
 \end{equation}
 
 %Sigma is summation (as in add everything up) whereas capital Pi is where you do the product of everything (multiply) 
-where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation, $k$ is the reaction rate coefficient for reaction $j$.
+where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation and $k$ is the reaction rate coefficient for reaction $j$.
 \textcolor{red}{ $\prod_lN_l^{a_{ij}^{(LHS)}}$ is something to do with electron processes which also contribute to the species densities. 
 In the original thesis \cite{Dorai2002modeling}, the last term is $\prod_lN_l^{a_{lj}^{(LHS)}}$, whereas in \cite{Stafford2004O2} it is $\prod_lN_l^{a_{ij}^{(LHS)}}$. 
-Not sure which is correct, but presumably the thesis as $l$ is referring to electron processes.}
-The reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions. 
-However, for electron-impact reactions, these are calculated as a function of the electron energy.
-Therefore, in the reaction chemistry set, only an electron-impact cross section is specified and the reaction rate is then calculated using the electron energy distribution function (EEDF) calculated internally by the GlobalKin Boltzmann equation solver.
+Not sure which is correct, but presumably the thesis as $l$ is referring to electron processes??}
+The reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
+%However, for electron-impact reactions, these are calculated as a function of the electron energy.
+%Therefore, in the reaction chemistry set, only an electron-impact cross section is specified and the reaction rate is then calculated using the electron energy distribution function (EEDF) calculated internally by the GlobalKin Boltzmann equation solver.
 
 As well as consideration of species, the electron temperature is also calculated by GlobalKin, taking into account power deposition in the plasma and electron energy losses through elastic and inelastic collisions as follows:
 
@@ -94,7 +101,7 @@ where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is
 \subsection*{GlobalKin Inputs}
 There are a number of inputs required for GlobalKin to work.
 Firstly plasma parameters are needed.
-These include the plasma volume, power input, gas feed composition and volume, gas and wall temperature, plasma surface area, diffusion length and initial molar fractions of each species.
+These include the plasma geometry (volume, surface area, plasma channel length), power input, gas feed composition, gas and wall temperature, diffusion length and initial molar fractions of each species.
 As well as these plasma parameters, it is also specified how regularly the EEDF will be updated.
 
 Secondly, the reaction chemistry set has to be specified. 
@@ -106,9 +113,9 @@ As well as this, other parameters are required, such as Lennard Jones parameters
 %Lennard Jones parameters 1 and 2. 1 is $\sigma$ which is the internuclear distance between atoms where the potential between them is zero. Parameter 2...? Units are kelvin?!
 In particular:
 \begin{itemize}
-\item the sticking/disappearance coefficient is the fraction of the species that will be lost through interaction with the wall ($\gamma$ in equation \ref{SpeciesEvolutionEqn})
-\item the return branching fraction is the fraction of the species of interest returning to the plasma following a different species being lost to the walls
-\item the return species is the species that this species will produce if it is lost to the wall
+\item the sticking/disappearance coefficient - the fraction of the species that will be lost through interaction with the wall ($\gamma$ in equation \ref{SpeciesEvolutionEqn})
+\item the return branching fraction - the fraction of the species of interest returning to the plasma following a different species being lost to the walls
+\item the return species - the species that this species will produce if it is lost to the wall
 \end{itemize}
 
 
@@ -120,7 +127,7 @@ For heavy species reactions, a specific rate coefficient can be specified in ter
 However, for light electrons that are able to easily gain energy from the electric field as well as collide and lose energy, their energies can vary greatly (as shown by the EEDF), therefore, a constant rate coefficient would not be appropriate. 
 Instead a reaction cross section is specified and the rate constant can then be calculated for electron processes by combining this cross section with the internally calculated EEDF.
 
-Alongside this, other things are specified, such as change in enthalpy during the reaction which contributes to gas heating and whether or not the collision is superelastic.
+Alongside this, other things are specified, such as change in enthalpy during the reaction which contributes to gas heating and whether or not a collision is superelastic.
 
 %\begin{itemize}
 %\item Arrhenius equation coefficients. Usually electron reaction rates don't use Arrhenius equation coefficients and instead use cross section and internal EEDF.
@@ -132,7 +139,7 @@ Alongside this, other things are specified, such as change in enthalpy during th
 %\end{itemize}
 
 \subsection*{GlobalKin Outputs}
-The out put of GlobalKin is mainly the time evolved species densities of each species included in the reaction chemistry set.
+The output of GlobalKin is mainly the time evolved species densities of each species included in the reaction chemistry set.
 This time can then be translated into a position along the plasma channel, as gas flow velocity is calculated.
 This allows an idea of spatial distribution of species along a plasma, even though the model itself does not take into account any spatial dimensions. Alongside this, other parameters such as gas temperature/heating can be investigated using GlobalKin.
 
@@ -141,15 +148,15 @@ This allows an idea of spatial distribution of species along a plasma, even thou
 GlobalKin can be used to simulate experimental conditions so that simulations and measured data can be compared.
 The data below shows comparisons between measured and simulated hydroxyl radical (OH) densities using different plasma parameters.
 
-The measured data is from absorption spectroscopy, using an atmospheric pressure radio-frequency plasma source with a gas feed of He with admixtures of H\textsubscript{2}O (obtained by diverting some of the He feed gas through a bubbler to saturate with water vapour).
-Absorption can then be translated into absolute species densities using the Beer Lambert Law.
+The measured data is from absorption spectroscopy, using an atmospheric pressure radio-frequency (13.56 MHz) plasma source with a gas feed of He with admixtures of H\textsubscript{2}O.
+Absorption data can then be translated into absolute species densities using the Beer Lambert Law.
 
 The examples shown below use a chemistry set for helium and water mixtures, developed by Sandra Schr\"oter in YPI.
 The set contains 44 species and 385 reactions.
 
 \subsection*{Spatial Distribution}
 
-Firstly, the OH density along the plasma channel was investigated by doing absorption spectroscopy at every 0.5 mm interval along the 30mm plasma channel, and an addition 3.5 mm into the effluent region.
+Firstly, the OH density along the plasma channel was investigated by doing absorption spectroscopy at every 0.5 - 1 mm interval along the 30mm plasma channel, and an additional 3.5 mm into the effluent region.
 The results of this experiment have then been compared to GlobalKin simulation using the same experimental plasma parameters.
 
 \begin{figure}
@@ -189,19 +196,20 @@ The idea is that each research group uses their own plasma model and chemistry s
 Following this, there can be iterations of the process until groups are happy with their simulations/outputs.
 The collaboration will be run in a series of stages.
 Firstly, codes will all be initialised, using parameters and short reaction sets provided by the coordinator, so that outcomes can be compared and groups can check that their codes are appropriate for the task.
-At this point, we need to make sure that GlobalKin is a suitable model and able to carry out simulations using the specified inputs in order to give the correct outputs.
+At this point, we need to make sure that GlobalKin is a suitable model for carrying out the simulations in line with the specified inputs in order to give the correct outputs.
 The deadline for this stage is currently 20.1.17.
 Following this, the simulations of air plasmas can begin.
 
 As part of this collaboration I am investigating air reaction chemistry sets that have been used before for air plasma modelling, and I will be carrying out simulations.
 
 
-\section*{Modelling Air Plasmas}
-\subsection*{What's been done before?} 
-There are many different models and chemistry sets that have been used for previous attempts at modelling air plasmas. 
-Issues with modelling atmospheric pressure air plasmas is the number of species that are involved and the high collisionality environment.
+%\section*{Modelling Air Plasmas}
+%\subsection*{What's been done before?} 
+%There are many different models and chemistry sets that have been used for previous attempts at modelling air plasmas. 
+%Issues with modelling atmospheric pressure air plasmas is the number of species that are involved and the high collisionality environment.
 \subsection*{Chemistry sets}
 For the purposes of both the collaboration, and my own research project, the aim is to find an appropriate air chemistry set that can be used for modelling.
+
 Firstly, in the original thesis and subsequent publication presenting the GlobalKin code, there is a full reaction chemistry set presented for modelling humid air plasmas interacting with polypropylene surfaces \cite{Dorai2002modeling, Dorai2003a}.
 Here, they consider two sets.
 Firstly the gas phase (consisting of species formed from, and reactions involving the flow gas containing N$_2$/O$_2$/H$_2$O in 79/20/1 proportions), and secondly the surface interaction chemistry. 
@@ -212,11 +220,24 @@ The model used is GlobalKin and, therefore, works as outlined above.
 However, there are other types of models that have been used for modelling air plasmas.
 For example, in a recent paper by Kutasi \textit{et al} \cite{Kutasi2016tuning} they present a model for an Ar/N$_2$/O$_2$ plasmas.
 Their main aim is to investigate the afterglow region of a plasma, both using Ar/N$_2$/O$_2$ mixture and using just N$_2$/O$_2$.
-The simulation works by solving the homogeneous electron Boltzmann equation, alongside the rate balance equations for the creation and loss of important heavy particles (ions and neutrals). 
-The maintenance reduced electric field is also calculated self-consistently.
+The model presented has a Boltzmann equation solver, which calculates the EEDF by taking into account electron impact with the parent gas, major species produced by plasma, and other electrons.
+For heavy species, zero dimensional continuity equations are constructed and the electric field is calculated self-consistently by satisfying the property of quasineutrality, ie, the electrons lost must equal the electrons produced.
+The model also incorporates a chemistry set and is run either using the ternary Ar/N$_2$/O$_2$ mixture, or the binary N$_2$/O$_2$ mixture.
+Unfortunately, the full reaction set is not presented and the paper states that the full reaction set will be presented in detail elsewhere.
+However, the N$_2$-O$_2$ reactions are taken mainly from \cite{Guerra1997self, Pintassilgo2005modelling, Kutasi2008modelling}.
+These papers present models with aims of further understanding dynamics of species production in low pressure N$_2$O$_2$ glow-discharges \cite{Guerra1997self} and production of species important for sterilisation processes, in particular for the emission of specific wavelength UV radiation \cite{Pintassilgo2005modelling, Kutasi2008modelling}.
+These models include not only ground and excited states of particles, but also often take into account the distribution of vibrational states of molecules, which may, or may not, be important for our modelling.
 
-Unfortunately, the full reaction set is not presented, however, the N$_2$-O$_2$ reactions are taken mainly from \cite{Guerra1997self, Pintassilgo2005modelling, Kutasi2008modelling}.
-In 1997, Guerra \textit{et al} \cite{Guerra1997self} presented a paper (as an extension to a previous publication \cite{Guerra1995non}), whereby 
+
+%These papers presented models for:
+%\begin{itemize}
+%\item Guerra \textit{et al} \cite{Guerra1997self} - "low pressure N$_2$O$_2$ glow discharge. Importance for studying for plasma reactors for chemical synthesis, depollution of atmosphere and surface treatments. Study of non equilibrium coupling between the electron and heavy particle kinetics. Done by solving Boltzmann equation and rate balance equations for certain atoms and vibrational states of molecules. Improved on the previous model \cite{Guerra1995non}. Self-consistent maintenance reduced electric field calculated.
+%\item Pintassilgo \textit{et al} \cite{Pintassilgo2005modelling} - Model for helping to understand the dynamics of particular NO and O species (as these are relevant for sterilisation purposes, in particular their emission of specific UV radiation). The model starts by calculating EEDF and the vibrational distribution functions of certain molecules and initial concentrations of other species. 
+%"kinetic model for looking at increasing sterilising species (specific NO and O species).
+%\item Kutasi \textit{et al} \cite{Kutasi2008modelling} - 
+%\end{itemize}
+%
+%In 1997, Guerra \textit{et al} \cite{Guerra1997self} presented a paper (as an extension to a previous publication \cite{Guerra1995non}), whereby 
 
 
 %is a paper building on a previous one \cite{Guerra1995non}, where some vibrational states of N$_2$ had to be an input parameter of the model, taken from experimental data. Here, the model consists of the electron Boltzmann equation coupled to rate balance equations for vibrationally excited molecules of N$_2$ and O$_2$, electronically excited states of N$_2$ and NO, N and O species (with term symbols attached?). All this plus continuity equations for electrons and main positive ions (N$_2^+$, N$_4^+$, O$^+$, O$_2^+$, NO$^+$). TO DO - read this paper to find out the point of what it was doing. What was the model doing? 
