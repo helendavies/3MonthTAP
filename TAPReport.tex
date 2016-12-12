@@ -20,9 +20,9 @@
 \begin{document}
 \maketitle
 
-\section*{Background}
+\section{Background}
 
-\subsection*{Wounds}
+\subsection{Wounds}
 
 Wounds and their management are an issue both in the UK and globally \cite{Posnett2008burden}.
 Methods of accelerating wound healing to decrease infection risk are sought, especially in developing countries where wound infection rates are extremely high \cite{Kihla2014risk}. 
@@ -30,7 +30,7 @@ Common wound-infecting pathogens such as \textit{Staphylococcus aureus} and \tex
 One technique under investigation is low temperature plasma (LTP), which has shown promise for both bacterial killing and wound healing promotion \cite{Kong2009plasma, Kramer2013suitability, Isbary2012successful, Isbary2010a}.
 
 
-\subsection*{Low Temperature Plasma}
+\subsection{Low Temperature Plasma}
 
 Plasma is quasineutral ionised gas, considered to be the fourth state of matter \cite{Fridman2013plasmamedicine}.
 Low temperature plasma (LTP), specifically, is formed when only a small percentage of gas particles are ionised, resulting in a low electron density and an overall low plasma temperature (approximately room temperature).
@@ -42,25 +42,81 @@ Thirdly, sufficiently energetic free electrons can cause ionisation of other ato
 
 LTP has shown significant promise in the eradication and/or inactivation of many microorganisms, including those in biofilms \cite{Laroussi2005low}. 
 There is also evidence to show that LTP may promote the wound healing process in eukaryotic cells \cite{Haertel2014nonthermal, Kramer2013suitability}.
-
-
 Identification of specific roles of different plasma components could help with tailoring plasmas for different biomedical applications.
 
+\section{Project aims}
+LOOK IN PROPOSAL
 For this PhD project the development of an LTP device utilising an air feed gas is proposed.
 It will be characterised both experimentally and computationally, and its potential for use in wound infection and healing applications assessed through various \textit{in vitro} biological assays.
 The investigation into using an air feed gas is beneficial when considering low-cost wound treatments, as it should reduce running costs, and increase device portability, through eliminating the need for bottled gases.
 
-\section*{Plasma Modelling}
+\section{Progress to Date: Plasma Modelling}
 For the last 3 months, I have been working on the computational aspects of my project.
-Modelling of plasmas in general is useful to be able to compare to experimental data. 
-It is then useful to be able to indicate which parameters may be the most influential for altering the concentrations of different species which may be particularly useful in terms of biological activity.
+Modelling of plasmas is useful as it allows for extraction of data that is not easily available experimentally. 
+For example, species may be difficult to measure, or the reaction pathways responsible for species production and destruction may be of interest.
+In cases such as these, a model can be used.
+However, first, models require benchmarking against direct experimental measurements to ensure as far as possible that it is a good approximation of real plasmas.
+Benchmarked models can also be used to help guide experiments in terms of the important plasma parameters responsible for affecting densities of specific species. 
+For example, those that are particularly relevant biologically.
 
-\subsection*{GlobalKin}
+
+\subsection{GlobalKin}
 The model of choice for simulations is GlobalKin.
-GlobalKin is a 0 dimensional global chemistry plasma model which has three main parts. (1) a reaction chemistry and transport module, (2) a Boltzmann equation solver for determining electron energy distribution functions (EEDF) and (3) an ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
-The chemistry and transport module constructs differential equations for the evolution of species concentrations and temperatures over time. 
-This takes into account the electron impact rate coefficients, which are calculated as a function of the electron energy by the Boltzmann solver (see below).
-The differential equations are then solved by the ODE solver.
+GlobalKin is a 0 dimensional global chemistry plasma model (\textcolor{red}{meaning that there is no spatial dimension?}) which has three main parts:
+\begin{enumerate}
+\item A reaction chemistry and transport module. 
+This part of the model takes into account all the species that are present in the plasma, all the reactions that could be happening, the probability that the reactions happen (reaction rate coefficients) and the interactions of the species with the walls. 
+This part of the model constructs ordinary differential equations (ODE) for the evolution of species densities and temperatures over time.
+\item A Boltzmann equation solver for determining electron energy distribution functions. 
+Within a plasma, free electrons are light and are readily accelerated by the electric field. 
+This means they can gain large amounts of energy.
+Equally, they can collide with other plasma components and lose some, or all, of their energy, therefore across the whole plasma, free electrons will have a wide range of energies.
+This range of energies is known as the electron energy distribution function, or EEDF.
+The Boltzmann solver within GlobalKin takes into account plasma parameters to calculate the EEDF of the plasma at regular, defined, time intervals in order to give the best approximation of electron energies in the plasma.
+\item An ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
+This part of the model solves the ODE created by the reaction chemistry module.
+\end{enumerate}
+
+\textcolor{red}{Does it go through multiple iterations of making equations etc???}
+
+\subsection{GlobalKin Inputs}
+There are a number of inputs required for GlobalKin to work.
+Firstly plasma parameters are needed.
+These include the plasma geometry (volume, surface area, plasma channel length), power input, gas feed composition, gas and wall temperature, diffusion length and initial molar fractions of each species.
+As well as these plasma parameters, it is also specified how regularly the EEDF will be updated.
+
+Secondly, the reaction chemistry set has to be specified. 
+This has two parts, (1) a list of species in the plasma as associated parameters and (2) a list of all the possible reactions in the plasma and their associated parameters described below.
+
+
+\subsubsection*{Species}
+Every species that is included in the model has to be specified with its enthalpy of formation, charge and molecular weight.
+As well as this, other parameters are required, such as Lennard Jones parameters (related to the potential between two atoms/molecules) and the characteristics of species interaction with walls.
+%Lennard Jones parameters 1 and 2. 1 is $\sigma$ which is the internuclear distance between atoms where the potential between them is zero. Parameter 2...? Units are kelvin?!
+In particular, with respect to density of species $i$:
+\begin{itemize}
+\item the sticking/disappearance coefficient - the fraction of species $i$ that will be lost through interaction with the wall ($\gamma$ in equation \ref{SpeciesEvolutionEqn})
+\item the return branching fraction - the fraction of a different species (species $j$) that produces species $i$ when it is lost to the walls ($f_{ji}$ \ref{SpeciesEvolutionEqn})
+\item the return species - the species that species $i$ will produce if it is lost to the wall
+\end{itemize}
+
+\textcolor{red}{How is the surface material taken into account?? Is it??}
+
+
+\subsubsection{Reactions}
+\label{Reactions}
+Every reaction taking place in the plasma also has to be specified along with a set of parameters.
+These parameters are basically the things required to calculate the reaction rate coefficient for each reaction.
+The methods for doing this are generally different for heavy species reactions and electron reactions, due to the strong dependence of reaction rate on energy.
+For heavy species (neutrals and ions) reactions, a specific rate coefficient can be specified in terms of Arrhenius equation coefficients, as ion energies do not change much due to their heavy mass.
+However, for electrons whose energies can vary greatly (shown by the EEDF), a constant reaction rate coefficient would not be appropriate.
+Instead, a reaction cross section is specified.
+This is the area around a particle that another particle must be within for a reaction to occur and is dependent on particle energy.
+The reaction rate coefficient for electron processes can then be calculated by combining this specified cross section with the internally calculated EEDF.
+
+Alongside this, other things are specified, such as change in enthalpy during the reaction which contributes to gas heating and whether or not a collision is superelastic.
+
+\subsubsection*{Reaction Chemistry Module}
 
 The time evolved density of species $i$ is determined using the following equation.
 
@@ -71,7 +127,7 @@ The time evolved density of species $i$ is determined using the following equati
 
 where $N$ is the number density of heavy species $i$, $\Lambda_D$ is the diffusion distance, $D$ is the diffusion coefficient, $\gamma$ is the sticking coefficient of species $j$ at the walls, $f_{ji}$ is the fraction of species $j$ that returns from the wall as species $i$, $S_i$ is the source term and $T_g$ is the gas temperature.
 
-The first term of equation \ref{SpeciesEvolutionEqn} refers to the interactions of species with the walls, the second is a source term for species, which takes into account the reactions producing and consuming it and the third term relates to the temperature.
+The first term of equation \ref{SpeciesEvolutionEqn} refers to the interactions of species with the walls, the second is a source term for species, which takes into account the reactions producing and consuming it and the third term relates to the gas temperature.
 
 The source term is calculated using the following equation:
 
@@ -81,13 +137,15 @@ S_i = \sum_j(a_{ij}^{RHS}-a_{ij}^{LHS})k_j\prod_lN_l^{a_{ij}^{(LHS)}}
 \end{equation}
 
 %Sigma is summation (as in add everything up) whereas capital Pi is where you do the product of everything (multiply) 
-where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation and $k$ is the reaction rate coefficient for reaction $j$.
+where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation \textcolor{red}{(i.e. the balance between the number of atoms/molecules of species produced and the number required to make them)} and $k$ is the reaction rate coefficient for reaction $j$.
 \textcolor{red}{ $\prod_lN_l^{a_{ij}^{(LHS)}}$ is something to do with electron processes which also contribute to the species densities. 
 In the original thesis \cite{Dorai2002modeling}, the last term is $\prod_lN_l^{a_{lj}^{(LHS)}}$, whereas in \cite{Stafford2004O2} it is $\prod_lN_l^{a_{ij}^{(LHS)}}$. 
 Not sure which is correct, but presumably the thesis as $l$ is referring to electron processes??}
-The reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
+As mentioned in section \ref{Reactions}, reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
 %However, for electron-impact reactions, these are calculated as a function of the electron energy.
 %Therefore, in the reaction chemistry set, only an electron-impact cross section is specified and the reaction rate is then calculated using the electron energy distribution function (EEDF) calculated internally by the GlobalKin Boltzmann equation solver.
+
+\subsubsection*{\textcolor{red}{Boltzmann Solver???}}
 
 As well as consideration of species, the electron temperature is also calculated by GlobalKin, taking into account power deposition in the plasma and electron energy losses through elastic and inelastic collisions as follows:
 
@@ -98,36 +156,6 @@ As well as consideration of species, the electron temperature is also calculated
 
 where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is the plasma power input, $m_e$ and $M_i$ are the masses of electrons and heavy particles, respectively, $\nu_{mi}$ is the collision frequency, $k$ is the reaction rate, $N_l$ is the gas phase collision partner density (presumably for electron collisions/processes?) and $\Delta\epsilon_l$ is the electron energy loss.
 
-\subsection*{GlobalKin Inputs}
-There are a number of inputs required for GlobalKin to work.
-Firstly plasma parameters are needed.
-These include the plasma geometry (volume, surface area, plasma channel length), power input, gas feed composition, gas and wall temperature, diffusion length and initial molar fractions of each species.
-As well as these plasma parameters, it is also specified how regularly the EEDF will be updated.
-
-Secondly, the reaction chemistry set has to be specified. 
-This has two parts, (1) a list of species in the plasma as associated parameters and (2) a list of all the possible reactions in the plasma and their associated parameters described below.
-
-\subsubsection*{Species}
-Every species that is included in the model has to be specified with its enthalpy of formation, charge and molecular weight.
-As well as this, other parameters are required, such as Lennard Jones parameters (related to the potential between two atoms/molecules) and the characteristics of species interaction with walls.
-%Lennard Jones parameters 1 and 2. 1 is $\sigma$ which is the internuclear distance between atoms where the potential between them is zero. Parameter 2...? Units are kelvin?!
-In particular:
-\begin{itemize}
-\item the sticking/disappearance coefficient - the fraction of the species that will be lost through interaction with the wall ($\gamma$ in equation \ref{SpeciesEvolutionEqn})
-\item the return branching fraction - the fraction of the species of interest returning to the plasma following a different species being lost to the walls
-\item the return species - the species that this species will produce if it is lost to the wall
-\end{itemize}
-
-
-\subsubsection*{Reactions}
-Every reaction taking place in the plasma also has to be specified along with a set of parameters.
-These parameters are basically the things required to calculate the reaction rate coefficient for each reaction.
-The methods for doing this are generally different for heavy species reactions and electron reactions, due to the strong dependence of reaction rate on energy.
-For heavy species reactions, a specific rate coefficient can be specified in terms of Arrhenius equation coefficients, as ion energies do not change much due to their heavy mass.
-However, for light electrons that are able to easily gain energy from the electric field as well as collide and lose energy, their energies can vary greatly (as shown by the EEDF), therefore, a constant rate coefficient would not be appropriate. 
-Instead a reaction cross section is specified and the rate constant can then be calculated for electron processes by combining this cross section with the internally calculated EEDF.
-
-Alongside this, other things are specified, such as change in enthalpy during the reaction which contributes to gas heating and whether or not a collision is superelastic.
 
 %\begin{itemize}
 %\item Arrhenius equation coefficients. Usually electron reaction rates don't use Arrhenius equation coefficients and instead use cross section and internal EEDF.
@@ -138,23 +166,36 @@ Alongside this, other things are specified, such as change in enthalpy during th
 %\item Electron energy loss in collisions
 %\end{itemize}
 
-\subsection*{GlobalKin Outputs}
+\subsection{GlobalKin Outputs}
 The output of GlobalKin is mainly the time evolved species densities of each species included in the reaction chemistry set.
 This time can then be translated into a position along the plasma channel, as gas flow velocity is calculated.
 This allows an idea of spatial distribution of species along a plasma, even though the model itself does not take into account any spatial dimensions. Alongside this, other parameters such as gas temperature/heating can be investigated using GlobalKin.
 
-\section*{Examples of using GlobalKin}
+\section{Examples of using GlobalKin}
+In order to benchmark GlobalKin, simulations can be carried out and compared to experimental data.
+Here, an example will be shown where hydroxyl radical density in a helium/water radio-frequency, atmospheric pressure plasma was measured by absorption spectroscopy and subsequently simulated by GlobalKin.
 
-GlobalKin can be used to simulate experimental conditions so that simulations and measured data can be compared.
-The data below shows comparisons between measured and simulated hydroxyl radical (OH) densities using different plasma parameters.
+The plasma source used is shown in figure ???????.
+The plasma channel dimensions are 3 cm x 1.1 cm x 0.1 cm and the gas feed was kept at 5 slm, with $\sim$ 4500 ppm admixture of water.
+The source was operated at 13.56 MHz frequency, and the power input range to the plasma could be varied between 2.99 W (minimum to sustain plasma) - 5.39 W (maximum before arcing).
 
-The measured data is from absorption spectroscopy, using an atmospheric pressure radio-frequency (13.56 MHz) plasma source with a gas feed of He with admixtures of H\textsubscript{2}O.
-Absorption data can then be translated into absolute species densities using the Beer Lambert Law.
+Experimentally, OH density was measured using absorption spectroscopy.
+Briefly, this involves measuring the incident and transmitted light of a LED of specific wavelength (specifically absorbed by OH) to calculate absorbance, which can then be translated into absolute species density using the Beer Lambert law.
 
-The examples shown below use a chemistry set for helium and water mixtures, developed by Sandra Schr\"oter in YPI.
-The set contains 44 species and 385 reactions.
+The examples shown below use a chemistry set for helium and water mixtures, compiled by Sandra Schr\"oter in YPI.
+The set contains 44 species and 385 reactions \textcolor{red}{(See Appendix for full reaction scheme)}.
+For the simulations, the power has to be inputted as a power density (W cm\textsuperscript{-3}), therefore the power input is divided by the plasma volume (0.33 cm\textsuperscript{3}) and the total gas flow is entered in sccm (5000 sccm He + 27 sccm H$_2$O).
+The diffusion length for a plasma of rectangular cross section is calculated, as shown below, where $x, y$ and $z$ are the plasma dimensions.
 
-\subsection*{Spatial Distribution}
+\begin{equation}
+\frac{1}{\Lambda_D^2} = \Big(\frac{\pi}{x}\Big)^2 + \Big(\frac{\pi}{y}\Big)^2 + \Big(\frac{\pi}{z}\Big)^2
+\end{equation}
+
+Initial molar fractions of species are set as 1 for helium, 5.4 x 10\textsuperscript{-3} for H$_2$O and 10\textsuperscript{-10} to 10\textsuperscript{-12} for all other species (as all species need an initial value for GlobalKin to work, even if it is very small). 
+The gas temperature was set at 310 K, and the wall temperature set at 295 K.
+
+
+\subsection{Spatial Distribution}
 
 Firstly, the OH density along the plasma channel was investigated by doing absorption spectroscopy at every 0.5 - 1 mm interval along the 30mm plasma channel, and an additional 3.5 mm into the effluent region.
 The results of this experiment have then been compared to GlobalKin simulation using the same experimental plasma parameters.
@@ -168,9 +209,9 @@ Blue points denote experimental data, red points show simulated data.}
 \label{SpatialGraph}
 \end{figure}
 
-As shown in figure \ref{SpatialGraph}, there is good agreement both in trend and absolute densities between both the simulated and measured data.
+As shown in figure \ref{SpatialGraph}, there is very good agreement both in trend and absolute densities between both the simulated and measured data.
 
-\subsection*{Power Variation}
+\subsection{Power Variation}
 
 Secondly, the effect of power variation on OH density in the plasma was investigated.
 For this the power applied was varied in the range of 2.99 - 5.39 W, and absorption spectroscopy measurements were taken at 2 cm from the gas inlet.
@@ -188,11 +229,15 @@ The OH density is shown on the y axis in cm\textsuperscript{-3}, and the power d
 \end{figure}
 
 
-\subsection*{European Collaboration}
-A collaboration was recently started across many plasma groups in Europe, with the aim of developing a global plasma model for air plasmas.
-This is of interest in my project, and provides a good opportunity to continue with modelling and be involved in such as initiative.
+\subsection{Next Steps: Development of Air Plasma Model}
 
-The idea is that each research group uses their own plasma model and chemistry set, then specific outputs from each group can be anonymised and distributed through the entire consortium.
+The next stage of my project is to model air plasmas, as these are the focus of my work.
+A collaboration was recently started across many plasma groups in Europe, with the aim of different models and chemistry sets for air plasmas.
+This is of interest in my project as it will allow me to develop and benchmark an air plasma model to other simulations and chemistry sets.
+
+When modelling plasmas, it is important to note that there are two main considerations.
+Firstly, the model platform to use, for example GlobalKin, and secondly, the reaction chemistry set.
+The idea for the collaboration is that each research group uses their own plasma model and chemistry set, then specific outputs from each group can be anonymised and distributed through the entire consortium for comparison.
 Following this, there can be iterations of the process until groups are happy with their simulations/outputs.
 The collaboration will be run in a series of stages.
 Firstly, codes will all be initialised, using parameters and short reaction sets provided by the coordinator, so that outcomes can be compared and groups can check that their codes are appropriate for the task.
@@ -200,15 +245,15 @@ At this point, we need to make sure that GlobalKin is a suitable model for carry
 The deadline for this stage is currently 20.1.17.
 Following this, the simulations of air plasmas can begin.
 
-As part of this collaboration I am investigating air reaction chemistry sets that have been used before for air plasma modelling, and I will be carrying out simulations.
+As part of this collaboration I am investigating air reaction chemistry sets that have been used before for air plasma modelling to help decide on which reaction set we will use, and I will be carrying out simulations.
 
 
 %\section*{Modelling Air Plasmas}
 %\subsection*{What's been done before?} 
 %There are many different models and chemistry sets that have been used for previous attempts at modelling air plasmas. 
 %Issues with modelling atmospheric pressure air plasmas is the number of species that are involved and the high collisionality environment.
-\subsection*{Chemistry sets}
-For the purposes of both the collaboration, and my own research project, the aim is to find an appropriate air chemistry set that can be used for modelling.
+\subsection{Chemistry Reaction Sets}
+For the purposes of both the collaboration, and my own research project, the aim is to find an appropriate air chemistry reaction set that can be used for modelling.
 
 Firstly, in the original thesis and subsequent publication presenting the GlobalKin code, there is a full reaction chemistry set presented for modelling humid air plasmas interacting with polypropylene surfaces \cite{Dorai2002modeling, Dorai2003a}.
 Here, they consider two sets.
