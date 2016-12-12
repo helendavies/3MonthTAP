@@ -65,7 +65,7 @@ For example, those that are particularly relevant biologically.
 
 \subsection{GlobalKin}
 The model of choice for simulations is GlobalKin.
-GlobalKin is a 0 dimensional global chemistry plasma model (\textcolor{red}{meaning that there is no spatial dimension?}) which has three main parts:
+GlobalKin is a 0 dimensional global chemistry plasma model (meaning that there is no spatial dimension taken into account) which has three main parts as described below:
 \begin{enumerate}
 \item A reaction chemistry and transport module. 
 This part of the model takes into account all the species that are present in the plasma, all the reactions that could be happening, the probability that the reactions happen (reaction rate coefficients) and the interactions of the species with the walls. 
@@ -80,7 +80,6 @@ The Boltzmann solver within GlobalKin takes into account plasma parameters to ca
 This part of the model solves the ODE created by the reaction chemistry module.
 \end{enumerate}
 
-\textcolor{red}{Does it go through multiple iterations of making equations etc???}
 
 \subsection{GlobalKin Inputs}
 There are a number of inputs required for GlobalKin to work.
@@ -103,7 +102,6 @@ In particular, with respect to density of species $i$:
 \item the return species - the species that species $i$ will produce if it is lost to the wall
 \end{itemize}
 
-\textcolor{red}{How is the surface material taken into account?? Is it??}
 
 
 \subsubsection*{Reactions}
@@ -135,15 +133,13 @@ The first term of equation \ref{SpeciesEvolutionEqn} refers to the interactions 
 The source term is calculated using the following equation:
 
 \begin{equation}
-S_i = \sum_j(a_{ij}^{RHS}-a_{ij}^{LHS})k_j\prod_lN_l^{a_{ij}^{(LHS)}}
+S_i = \sum_j(a_{ij}^{RHS}-a_{ij}^{LHS})k_j\prod_lN_l^{a_{lj}^{(LHS)}}
 \label{SourceTermEqn}
 \end{equation}
 
 %Sigma is summation (as in add everything up) whereas capital Pi is where you do the product of everything (multiply) 
 where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation and $k$ is the reaction rate coefficient for reaction $j$.
-\textcolor{red}{ $\prod_lN_l^{a_{ij}^{(LHS)}}$ is something to do with electron processes which also contribute to the species densities. 
-In the original thesis \cite{Dorai2002modeling}, the last term is $\prod_lN_l^{a_{lj}^{(LHS)}}$, whereas in \cite{Stafford2004O2} it is $\prod_lN_l^{a_{ij}^{(LHS)}}$. 
-Not sure which is correct, but presumably the thesis as $l$ is referring to electron processes??}
+$\prod_lN_l^{a_{lj}^{(LHS)}}$ is a term relating to the interaction of species $i$ with any other species, including electrons and heavy particles.
 As mentioned in section \ref{Reactions}, reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
 %However, for electron-impact reactions, these are calculated as a function of the electron energy.
 %Therefore, in the reaction chemistry set, only an electron-impact cross section is specified and the reaction rate is then calculated using the electron energy distribution function (EEDF) calculated internally by the GlobalKin Boltzmann equation solver.
@@ -155,13 +151,22 @@ As well as consideration of species, the electron temperature is also calculated
 \label{ElectronTempEqn}
 \end{equation}
 
-where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is the plasma power input, $m_e$ and $M_i$ are the masses of electrons and heavy particles, respectively, $\nu_{mi}$ is the collision frequency, $k$ is the reaction rate, $N_l$ is the gas phase collision partner density (presumably for electron collisions/processes?) and $\Delta\epsilon_l$ is the electron energy loss.
+where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is the plasma power input, $m_e$ and $M_i$ are the masses of electrons and heavy particles, respectively, $\nu_{mi}$ is the collision frequency, $k$ is the reaction rate, $N_l$ is the gas phase collision partner density and $\Delta\epsilon_l$ is the electron energy loss.
 
-\subsection{\textcolor{red}{The Boltzmann Solver}}
+\subsection{The Boltzmann Solver}
 
 
-The Boltzmann solver in GlobalKin is responsible for calculating electron impact rate coefficients, diffusion coefficients and mobilities as a function of electron temperature at regular intervals.
+The Boltzmann solver in GlobalKin is responsible for calculating electron impact rate coefficients, diffusion coefficients and mobilities as a function of electron temperature at regular intervals (interval specified in GlobalKin input file).
 Then, the appropriate coefficient for a given electron temperature can be fed back into the ODE for species density and electron temperature.
+
+The way the modules of the model work together is depicted in figure \ref{GlobalKinDiagram}.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{Figures/GlobalKinDiagram}
+\caption{Diagram showing how the GlobalKin model works. Firstly ODEs for species density and electron temperature are constructed. This takes direct GlobalKin inputs specified by the used, as well as electron reaction rate coefficients, diffusion coefficients and mobilities from the Boltzmann solver. An ODE solver then solves the equations and the new species densities are fed back into the ODEs and densities are recalculated. At regular intervals, the Boltzmann solver also updates and new coefficients are fed back into the ODEs for the ODE solver to work with.}
+\label{GlobalKinDiagram}
+\end{figure}
+
 
 %\begin{itemize}
 %\item Arrhenius equation coefficients. Usually electron reaction rates don't use Arrhenius equation coefficients and instead use cross section and internal EEDF.
@@ -179,7 +184,7 @@ This allows an idea of spatial distribution of species along a plasma, even thou
 
 \section{Examples of using GlobalKin}
 In order to benchmark GlobalKin, simulations can be carried out and compared to experimental data.
-Here, an example will be shown where hydroxyl radical density in a helium/water radio-frequency, atmospheric pressure plasma was measured by absorption spectroscopy and subsequently simulated by GlobalKin.
+Here, an example will be shown where hydroxyl radical density in a helium/water radio-frequency, atmospheric pressure plasma was measured by absorption spectroscopy (Helen Davies, Rotation Project, 2016) and subsequently simulated by GlobalKin.
 
 The plasma source used is shown in figure \ref{PlasmafromApiwat}.
 The plasma channel dimensions are 3 cm x 1.1 cm x 0.1 cm and the gas feed was kept at 5 slm, with $\sim$ 4500 ppm admixture of water.
@@ -187,15 +192,15 @@ The source was operated at 13.56 MHz frequency, and the power input range to the
 
 \begin{figure}
 \includegraphics[width=\textwidth]{Figures/PlasmafromApiwat}
-\caption{Plasma source}
+\caption{Diagram showing the RF plasma source from the side (left) and the top (right). Acknowledgements to Apiwat Wijaikhum for provision of the diagram.}
 \label{PlasmafromApiwat}
 \end{figure}
 
 Experimentally, OH density was measured using absorption spectroscopy.
-Briefly, this involves measuring the incident and transmitted light of a LED of specific wavelength (specifically absorbed by OH) to calculate absorbance, which can then be translated into absolute species density using the Beer Lambert law (Davies, H. Rotation Project, 2016).
+Briefly, this involves measuring the incident and transmitted light of a LED of specific wavelength (specifically absorbed by OH) to calculate absorbance, which can then be translated into absolute species density using the Beer Lambert law.
 
-The examples shown below use a chemistry set for helium and water mixtures, compiled and tested by Sandra Schr\"oter in YPI.
-The set contains 44 species and 385 reactions \textcolor{red}{(See Appendix for full reaction scheme)}.
+The example simulations shown below use a chemistry set for helium and water mixtures, compiled and tested by Sandra Schr\"oter in YPI.
+The set contains 44 species and 385 reactions %\textcolor{red}{(See Appendix for full reaction scheme)}.
 For the simulations, the power has to be inputted as a power density (W cm\textsuperscript{-3}), therefore the power input is divided by the plasma volume (0.33 cm\textsuperscript{3}) and the total gas flow is entered in sccm (5000 sccm He + 27 sccm H$_2$O).
 The diffusion length for a plasma of rectangular cross section is calculated, as shown below, where $x, y$ and $z$ are the plasma dimensions.
 
