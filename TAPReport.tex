@@ -25,9 +25,8 @@
 \subsection{Wounds}
 
 Wounds and their management are an issue both in the UK and globally \cite{Posnett2008burden}.
-Methods of accelerating wound healing to decrease infection risk are sought, especially in developing countries where wound infection rates are extremely high \cite{Kihla2014risk}. 
-Common wound-infecting pathogens such as \textit{Staphylococcus aureus} and \textit{pseudomonas aeruginosa} \cite{Church2006burn, Bowler2001wound} are becoming increasingly resistant to antibiotics, therefore, new wound treatments appropriate for the healthcare budgets of both developed and developing countries are required \cite{Chambers2009waves, Godebo2013multidrug, Howell2005a}.
-One technique under investigation is low temperature plasma (LTP), which has shown promise for both bacterial killing and wound healing promotion \cite{Kong2009plasma, Kramer2013suitability, Isbary2012successful, Isbary2010a}.
+The high rates of wound infections in developing countries and the increasing antibiotic resistance in common wound infecting pathogens (such as \textit{Staphylococcus aureus} and \textit{pseudomonas aeruginosa} \cite{Church2006burn, Bowler2001wound}) are motivating the investigation into new therapeutics to accelerate wound healing and treat and/or prevent subsequent infection \cite{Kihla2014risk, Chambers2009waves, Godebo2013multidrug, Howell2005a}.
+Low temperature plasma (LTP) has shown significant promise in the eradication and/or inactivation of many microorganisms, including those in biofilms \cite{Laroussi2005low}, and there is evidence to show that LTP may promote the wound healing process in eukaryotic cells \cite{Haertel2014nonthermal, Kramer2013suitability, Isbary2012successful, Isbary2010a}.
 
 
 \subsection{Low Temperature Plasma}
@@ -38,19 +37,13 @@ The appealing properties of LTP arise due to electron-mediated processes.
 Firstly, dissociation of molecules by electron impact produce, for example, free radicals, including reactive oxygen and nitrogen species (RONS), which are known to be bactericidal \cite{Kong2009plasma}.
 Secondly, electronic excitation from electron impact causes excitation of molecules and subsequent emission of, for example, UV radiation which is known to be bactericidal at certain wavelengths and powers \cite{Laroussi2004evaluation}.
 Thirdly, sufficiently energetic free electrons can cause ionisation of other atoms/molecules to sustain the plasma and produce ions that can contribute to the bactericidal effects of LTP \cite{Mendis2000a, Laroussi2002nonthermal}.
-
-
-LTP has shown significant promise in the eradication and/or inactivation of many microorganisms, including those in biofilms \cite{Laroussi2005low}. 
-There is also evidence to show that LTP may promote the wound healing process in eukaryotic cells \cite{Haertel2014nonthermal, Kramer2013suitability}.
 Identification of specific roles of different plasma components could help with tailoring plasmas for different biomedical applications.
 
 \section{Project aims}
 
 The overall aims of the project are to develop a low temperature air plasma device, with the aim of characterising its composition, both experimentally and computationally.
-This will be done through the use of various experimental diagnostic techniques, alongside the development and benchmarking of a global air plasma model.
-
-Further to this, the aim is to determine the effects of air plasma treatment on wounds and their healing.
-This will be done via various \textit{in vitro} biological assays to determine the effects of air plasma treatment on wound healing rates, and also the differential effects of plasma treatment on both pro- and eukaryotic cells, both of which would be implicated in the treatment of wounds.
+%This will be done through the use of various experimental diagnostic techniques, alongside the development and benchmarking of a global air plasma model.
+Further to this, the aim is to determine the effects of air plasma treatment on wounds and their healing, via \textit{in vitro} biological assays to determine the effects of air plasma treatment on wound healing rates, and the differential effects of plasma treatment on both pro- and eukaryotic cells.
 
 
 \section{Progress to Date: Plasma Modelling}
@@ -59,25 +52,25 @@ Modelling of plasmas is useful as it allows for extraction of data that is not e
 For example, species may be difficult to measure, or the reaction pathways responsible for species production and destruction may be of interest.
 In cases such as these, a model can be used.
 However, first, models require benchmarking against direct experimental measurements to ensure as far as possible that it is a good approximation of real plasmas.
-Benchmarked models can also be used to help guide experiments in terms of the important plasma parameters responsible for affecting densities of specific species. 
-For example, those that are particularly relevant biologically.
+%Benchmarked models can also be used to help guide experiments by indicating the parameters important for controlling biologically relevant species.
 
 
 \subsection{GlobalKin}
 The model of choice for simulations is GlobalKin.
-GlobalKin is a 0 dimensional global chemistry plasma model (meaning that there is no spatial dimension taken into account) which has three main parts as described below:
+GlobalKin is a 0 dimensional global chemistry plasma model (meaning that there is no spatial dimension taken into account) which has three main parts as described below \cite{Stafford2004O2}:
 \begin{enumerate}
 \item A reaction chemistry and transport module. 
-This part of the model takes into account all the species that are present in the plasma, all the reactions that could be happening, the probability that the reactions happen (reaction rate coefficients) and the interactions of the species with the walls. 
-This part of the model constructs ordinary differential equations (ODE) for the evolution of species densities and temperatures over time.
+This part of the model takes into account all the species that are present in the plasma, and their influx to and efflux from the plasma by constructing ordinary differential equations (ODEs) for time evolution of species densities and electron temperatures.
+%all the reactions that could be happening, the probability that the reactions happen (reaction rate coefficients) and the interactions of the species with the walls. 
+%This part of the model constructs ordinary differential equations (ODE) for the evolution of species densities and temperatures over time.
 \item A Boltzmann equation solver for determining electron energy distribution functions. 
 Within a plasma, free electrons are light and are readily accelerated by the electric field. 
 This means they can gain large amounts of energy.
 Equally, they can collide with other plasma components and lose some, or all, of their energy, therefore across the whole plasma, free electrons will have a wide range of energies.
 This range of energies is known as the electron energy distribution function, or EEDF.
 The Boltzmann solver within GlobalKin takes into account plasma parameters to calculate the EEDF of the plasma at regular, defined, time intervals in order to give the best approximation of electron energies in the plasma.
-\item An ordinary differential equation (ODE) solver \cite{Stafford2004O2}.
-This part of the model solves the ODE created by the reaction chemistry module.
+\item An ordinary differential equation (ODE) solver for solving the ODEs in the chemistry module.
+%This part of the model solves the ODE created by the reaction chemistry module.
 \end{enumerate}
 
 
@@ -88,7 +81,7 @@ These include the plasma geometry (volume, surface area, plasma channel length),
 As well as these plasma parameters, it is also specified how regularly the EEDF will be updated.
 
 Secondly, the reaction chemistry set has to be specified. 
-This has two parts, (1) a list of species in the plasma as associated parameters and (2) a list of all the possible reactions in the plasma and their associated parameters described below.
+This has two parts, (1) a list of species in the plasma and (2) a list of all possible reactions in the plasma.
 
 
 \subsubsection*{Species}
@@ -98,7 +91,7 @@ As well as this, other parameters are required, such as Lennard Jones parameters
 In particular, with respect to density of species $i$:
 \begin{itemize}
 \item the sticking/disappearance coefficient - the fraction of species $i$ that will be lost through interaction with the wall ($\gamma$ in equation \ref{SpeciesEvolutionEqn})
-\item the return branching fraction - the fraction of a different species (species $j$) that produces species $i$ when it is lost to the walls ($f_{ji}$ \ref{SpeciesEvolutionEqn})
+\item the return branching fraction - the fraction of a different species (species $j$) that produces species $i$ when it is lost to the walls ($f_{ji}$ in equation \ref{SpeciesEvolutionEqn})
 \item the return species - the species that species $i$ will produce if it is lost to the wall
 \end{itemize}
 
@@ -107,9 +100,9 @@ In particular, with respect to density of species $i$:
 \subsubsection*{Reactions}
 \label{Reactions}
 Every reaction taking place in the plasma also has to be specified along with a set of parameters.
-These parameters are basically the things required to calculate the reaction rate coefficient for each reaction.
+These parameters are required to calculate the reaction rate coefficient for each reaction.
 The methods for doing this are generally different for heavy species reactions and electron reactions, due to the strong dependence of reaction rate on energy.
-For heavy species (neutrals and ions) reactions, a specific rate coefficient can be specified in terms of Arrhenius equation coefficients, as ion energies do not change much due to their heavy mass.
+For heavy species (neutrals and ions) reactions, a specific rate coefficient can be specified as ion energies do not change much due to their heavy mass.
 However, for electrons whose energies can vary greatly (shown by the EEDF), a constant reaction rate coefficient would not be appropriate.
 Instead, a reaction cross section is specified.
 This is the area around a particle that another particle must be within for a reaction to occur and is dependent on particle energy.
@@ -140,30 +133,30 @@ S_i = \sum_j(a_{ij}^{RHS}-a_{ij}^{LHS})k_j\prod_lN_l^{a_{lj}^{(LHS)}}
 %Sigma is summation (as in add everything up) whereas capital Pi is where you do the product of everything (multiply) 
 where $a$ is the stoichiometric coefficients of species $i$ in reaction $j$ on the right and left hand side (RHS and LHS, respectively) of the reaction equation and $k$ is the reaction rate coefficient for reaction $j$.
 $\prod_lN_l^{a_{lj}^{(LHS)}}$ is a term relating to the interaction of species $i$ with any other species, including electrons and heavy particles.
-As mentioned in section \ref{Reactions}, reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
+%As mentioned in section \ref{Reactions}, reaction rates for use in equation \ref{SourceTermEqn} are calculated using Arrhenius expressions for heavy species only reactions, and from electron-impact cross section data for electron processes. 
 %However, for electron-impact reactions, these are calculated as a function of the electron energy.
 %Therefore, in the reaction chemistry set, only an electron-impact cross section is specified and the reaction rate is then calculated using the electron energy distribution function (EEDF) calculated internally by the GlobalKin Boltzmann equation solver.
 
-As well as consideration of species, the electron temperature is also calculated by GlobalKin, taking into account power deposition in the plasma and electron energy losses through elastic and inelastic collisions as follows:
-
-\begin{equation}
-\frac{d}{dt}\Big(\frac{3}{2}k_BT_e\Big) = P_d - \sum_i\frac{3}{2}n_e\nu_{mi}\Big(\frac{2m_e}{M_i}\Big)k_B(T_e - T_i) + \sum_l n_ek_lN_l\Delta\epsilon_l
-\label{ElectronTempEqn}
-\end{equation}
-
-where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is the plasma power input, $m_e$ and $M_i$ are the masses of electrons and heavy particles, respectively, $\nu_{mi}$ is the collision frequency, $k$ is the reaction rate, $N_l$ is the gas phase collision partner density and $\Delta\epsilon_l$ is the electron energy loss.
+As well as consideration of species, the electron temperature is also calculated by GlobalKin, taking into account power deposition in the plasma and electron energy losses through elastic and inelastic collisions.
+%
+%\begin{equation}
+%\frac{d}{dt}\Big(\frac{3}{2}k_BT_e\Big) = P_d - \sum_i\frac{3}{2}n_e\nu_{mi}\Big(\frac{2m_e}{M_i}\Big)k_B(T_e - T_i) + \sum_l n_ek_lN_l\Delta\epsilon_l
+%\label{ElectronTempEqn}
+%\end{equation}
+%
+%where $n_e$ is the electron density, $T_e$ is the electron temperature, $P_d$ is the plasma power input, $m_e$ and $M_i$ are the masses of electrons and heavy particles, respectively, $\nu_{mi}$ is the collision frequency, $k$ is the reaction rate, $N_l$ is the gas phase collision partner density and $\Delta\epsilon_l$ is the electron energy loss.
 
 \subsection{The Boltzmann Solver}
 
 
-The Boltzmann solver in GlobalKin is responsible for calculating electron impact rate coefficients, diffusion coefficients and mobilities as a function of electron temperature at regular intervals (interval specified in GlobalKin input file).
-Then, the appropriate coefficient for a given electron temperature can be fed back into the ODE for species density and electron temperature.
+The Boltzmann solver in GlobalKin is responsible for calculating electron impact rate coefficients (from cross sections), diffusion coefficients and mobilities as a function of electron temperature at regular intervals.
+Then, the appropriate coefficient for a given electron temperature can be fed back into the ODEs for species density and electron temperature.
 
 The way the modules of the model work together is depicted in figure \ref{GlobalKinDiagram}.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{Figures/GlobalKinDiagram}
-\caption{Diagram showing how the GlobalKin model works. Firstly ODEs for species density and electron temperature are constructed. This takes direct GlobalKin inputs specified by the used, as well as electron reaction rate coefficients, diffusion coefficients and mobilities from the Boltzmann solver. An ODE solver then solves the equations and the new species densities are fed back into the ODEs and densities are recalculated. At regular intervals, the Boltzmann solver also updates and new coefficients are fed back into the ODEs for the ODE solver to work with.}
+\includegraphics[width=\textwidth]{Figures/GlobalKin}
+\caption{Diagram showing how the GlobalKin model works. Firstly ODEs for species density and electron temperature are constructed. This takes direct GlobalKin inputs specified by the user, as well as electron reaction rate coefficients, diffusion coefficients and mobilities from the Boltzmann solver. An ODE solver then solves the equations and the new species densities are fed back into the ODEs and densities are recalculated. At regular intervals, the Boltzmann solver also updates and new coefficients are fed back into the ODEs for the ODE solver to work with. This results in the time evolution of species densities and electron temperature.}
 \label{GlobalKinDiagram}
 \end{figure}
 
@@ -179,15 +172,17 @@ The way the modules of the model work together is depicted in figure \ref{Global
 
 \subsection{GlobalKin Outputs}
 The output of GlobalKin is mainly the time evolved species densities of each species included in the reaction chemistry set.
-This time can then be translated into a position along the plasma channel, as gas flow velocity is calculated.
-This allows an idea of spatial distribution of species along a plasma, even though the model itself does not take into account any spatial dimensions. Alongside this, other parameters such as gas temperature/heating can be investigated using GlobalKin.
+Gas temperature/heating can also be investigated.
+Time points can then be translated into position along the plasma channel as gas flow velocity is calculated.
+%This time can then be translated into a position along the plasma channel, as gas flow velocity is calculated.
+%This allows an idea of spatial distribution of species along a plasma, even though the model itself does not take into account any spatial dimensions. Alongside this, other parameters such as gas temperature/heating can be investigated using GlobalKin.
 
 \section{Examples of using GlobalKin}
 In order to benchmark GlobalKin, simulations can be carried out and compared to experimental data.
-Here, an example will be shown where hydroxyl radical density in a helium/water radio-frequency, atmospheric pressure plasma was measured by absorption spectroscopy (Helen Davies, Rotation Project, 2016) and subsequently simulated by GlobalKin.
+Here, an example will be shown where hydroxyl radical density in a helium/water, radio-frequency, atmospheric pressure plasma was measured by absorption spectroscopy (Helen Davies, Rotation Project, 2016) and subsequently simulated using GlobalKin.
 
 The plasma source used is shown in figure \ref{PlasmafromApiwat}.
-The plasma channel dimensions are 3 cm x 1.1 cm x 0.1 cm and the gas feed was kept at 5 slm, with $\sim$ 4500 ppm admixture of water.
+The plasma channel dimensions were 3 cm x 1.1 cm x 0.1 cm and the gas feed was kept at 5 slm helium, with $\sim$ 4500 ppm admixture of water.
 The source was operated at 13.56 MHz frequency, and the power input range to the plasma could be varied between 2.99 W (minimum to sustain plasma) - 5.39 W (maximum before arcing).
 
 \begin{figure}
@@ -197,12 +192,12 @@ The source was operated at 13.56 MHz frequency, and the power input range to the
 \end{figure}
 
 Experimentally, OH density was measured using absorption spectroscopy.
-Briefly, this involves measuring the incident and transmitted light of a LED of specific wavelength (specifically absorbed by OH) to calculate absorbance, which can then be translated into absolute species density using the Beer Lambert law.
+Briefly, this involves measuring the incident and transmitted light of a LED of specific wavelength (specifically absorbed by OH) to calculate absorbance, which can then be translated into absolute OH density using the Beer Lambert law.
 
 The example simulations shown below use a chemistry set for helium and water mixtures, compiled and tested by Sandra Schr\"oter in YPI.
-The set contains 44 species and 385 reactions %\textcolor{red}{(See Appendix for full reaction scheme)}.
+The set contains 44 species and 385 reactions. %\textcolor{red}{(See Appendix for full reaction scheme)}.
 For the simulations, the power has to be inputted as a power density (W cm\textsuperscript{-3}), therefore the power input is divided by the plasma volume (0.33 cm\textsuperscript{3}) and the total gas flow is entered in sccm (5000 sccm He + 27 sccm H$_2$O).
-The diffusion length for a plasma of rectangular cross section is calculated, as shown below, where $x, y$ and $z$ are the plasma dimensions.
+The diffusion length for a plasma of rectangular cross section is calculated, as shown below, where $x$, $y$ and $z$ are the plasma dimensions.
 
 \begin{equation}
 \frac{1}{\Lambda_D^2} = \Big(\frac{\pi}{x}\Big)^2 + \Big(\frac{\pi}{y}\Big)^2 + \Big(\frac{\pi}{z}\Big)^2
@@ -214,7 +209,7 @@ The gas temperature was set at 310 K, and the wall temperature set at 295 K.
 
 \subsection{Spatial Distribution}
 
-Firstly, the OH density along the plasma channel was investigated by doing absorption spectroscopy at every 0.5 - 1 mm interval along the 30mm plasma channel, and an additional 3.5 mm into the effluent region.
+Firstly, the OH density along the plasma channel was investigated by doing absorption spectroscopy at every 0.5 - 1 mm interval along the 30 mm plasma channel, and an additional 3.5 mm into the effluent region.
 The results of this experiment have then been compared to GlobalKin simulation using the same experimental plasma parameters.
 
 \begin{figure}
@@ -231,7 +226,7 @@ As shown in figure \ref{SpatialGraph}, there is very good agreement both in tren
 \subsection{Power Variation}
 
 Secondly, the effect of power variation on OH density in the plasma was investigated.
-For this the power applied was varied in the range of 2.99 - 5.39 W, and absorption spectroscopy measurements were taken at 2 cm from the gas inlet, in the steady state region (see figure \ref{SpatialGraph}).
+For this the power applied was varied in the range of 2.99 - 5.39 W, and absorption spectroscopy measurements were taken at 2 cm from the gas inlet, in the steady state region.
 Similarly, the simulations were done at the same powers and data points taken at the same position.
 Comparison between measurements and simulations are shown in figure \ref{PowerVariation}.
 
@@ -250,19 +245,21 @@ The OH density is shown on the y axis in cm\textsuperscript{-3}, and the power d
 
 The next stage of my project is to model air plasmas, as these are the focus of my work.
 A collaboration was recently started across many plasma groups in Europe, with the aim of benchmarking and standardising different models and chemistry sets for air plasmas.
-This is of interest in my project as it will allow me to develop and benchmark an air plasma model to other simulations and chemistry sets.
+This is of interest in my project as it will allow me to develop and benchmark an air plasma model against other simulations and chemistry sets.
 
 When modelling plasmas, it is important to note that there are two main considerations.
 Firstly, the model platform to use, for example GlobalKin, and secondly, the reaction chemistry set.
 The idea for the collaboration is that each research group uses their own plasma model and chemistry set, then specific outputs from each group can be anonymised and distributed through the entire consortium for comparison.
-Following this, there can be iterations of the process until groups are happy with their simulations/outputs.
-The collaboration will be run in a series of stages.
-Firstly, codes will all be initialised, using parameters and short reaction sets provided by the coordinator, so that outcomes can be compared and groups can check that their codes are appropriate for the task.
-At this point, we need to make sure that GlobalKin is a suitable model for carrying out the simulations in line with the specified inputs in order to give the correct outputs.
-The deadline for this stage is currently 20.1.17.
-Following this, the simulations of air plasmas can begin.
 
 As part of this collaboration I am investigating air reaction chemistry sets that have been used before for air plasma modelling to help decide on which reaction set we will use, and I will be carrying out simulations.
+
+%Following this, there can be iterations of the process until groups are happy with their simulations/outputs.
+%The collaboration will be run in a series of stages.
+%Firstly, codes will all be initialised, using parameters and short reaction sets provided by the coordinator, so that outcomes can be compared and groups can check that their codes are appropriate for the task.
+%At this point, we need to make sure that GlobalKin is a suitable model for carrying out the simulations in line with the specified inputs in order to give the correct outputs.
+%The deadline for this stage is currently 20.1.17.
+%Following this, the simulations of air plasmas can begin.
+
 
 
 %\section*{Modelling Air Plasmas}
@@ -273,11 +270,14 @@ As part of this collaboration I am investigating air reaction chemistry sets tha
 For the purposes of both the collaboration, and my own research project, the aim is to find an appropriate air chemistry reaction set that can be used for modelling.
 
 Firstly, in the original thesis and subsequent publication presenting the GlobalKin code, there is a full reaction chemistry set presented for modelling humid air plasmas interacting with polypropylene surfaces \cite{Dorai2002modeling, Dorai2003a}.
-Here, they consider two sets.
-Firstly the gas phase (consisting of species formed from, and reactions involving the flow gas containing N$_2$/O$_2$/H$_2$O in 79/20/1 proportions), and secondly the surface interaction chemistry. 
-For the purposes of our model, only the gas phase reactions are of interest.
-The gas phase consists $\sim$334 reactions and 56 species. 
-The model used is GlobalKin and, therefore, works as outlined above.
+Here, they consider two sets used by GlobalKin - one for the gas phase (consisting of species and reactions involving N$_2$/O$_2$/H$_2$O) and one for the surface interaction chemistry.
+For the purposes of our model, only the gas phase chemistry reaction set containing $\sim$334 reactions and 56 species is of interest.
+
+%Firstly the gas phase (consisting of species formed from, and reactions involving the flow gas containing N$_2$/O$_2$/H$_2$O in 79/20/1 proportions), and secondly the surface interaction chemistry. 
+%For the purposes of our model, only the gas phase reactions are of interest.
+%The gas phase consists $\sim$334 reactions and 56 species. 
+%The model used is GlobalKin and, therefore, works as outlined above.
+%
 
 However, there are other types of models that have been used for modelling air plasmas.
 For example, in a recent paper by Kutasi \textit{et al} \cite{Kutasi2016tuning} they present a model for an Ar/N$_2$/O$_2$ plasmas.
@@ -296,11 +296,11 @@ These models include not only ground and excited states of particles, but also o
 The next aim is to determine an appropriate air chemistry reaction set for an air plasma model.
 Assuming GlobalKin is a suitable model for participating in the collaboration, then the reaction set will be used for this too.
 
-However, alongside the determination of an appropriate chemistry reaction set, the physics of the plasma source to be used will also need to be considered, and decided on, as the plasma geometry is required by GlobalKin.
+However, alongside the determination of an appropriate chemistry reaction set, the physics of the plasma source to be used will also need to be considered, as the plasma geometry is required by GlobalKin.
 Previously presented air plasmas with biomedical application potential have shown a number of different configurations.
 For example air plasma jets (so-called by having an air feed gas which carries a 'jet' of plasma effluent to the biological sample to be treated \cite{Kolb2008cold, Chen2009blood}) have been presented.
 Also, configurations have been presented where there is no air flow, but the electrodes (where the ground electrode may be the biological sample to be treated \cite{Fridman2007floating}) ignite the ambient air between them \cite{Laroussi2004evaluation}. 
-One the other hand, a similar source to the one shown in figure \ref{PlasmafromApiwat} could be used, but with high voltage pulses applied, rather than the RF sine wave.
+One the other hand, a similar source to the one shown in figure \ref{PlasmafromApiwat} could be used, but with nanosecond high voltage pulses applied, rather than the RF sine wave.
 
 
 %These papers presented models for:
